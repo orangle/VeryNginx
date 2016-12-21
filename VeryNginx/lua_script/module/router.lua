@@ -1,7 +1,7 @@
 -- -*- coding: utf-8 -*-
 -- -- @Date    : 2016-01-02 00:35
 -- -- @Author  : Alexa (AlexaZhou@163.com)
--- -- @Link    : 
+-- -- @Link    :
 -- -- @Disc    : url router
 
 local summary = require "summary"
@@ -19,7 +19,7 @@ _M.mime_type['.js'] = "application/x-javascript"
 _M.mime_type['.css'] = "text/css"
 _M.mime_type['.html'] = "text/html"
 
-function _M.filter() 
+function _M.filter()
     local action = string.lower(ngx.req.get_method().." "..ngx.var.uri)
     local handle = _M.url_route[ action ]
     if handle ~= nil then
@@ -49,7 +49,7 @@ function _M.filter()
             ngx.say( f:read("*all") )
             f:close()
             ngx.exit(200)
-        else        
+        else
             ngx.exit(404)
         end
     end
@@ -58,20 +58,20 @@ end
 function _M.check_session()
     -- get all cookies
     local user, session
-    
+
     local cookie_obj, err = cookie:new()
     local fields = cookie_obj:get_all()
     if not fields then
         return false
     end
-    
-    user = fields['verynginx_user'] 
+
+    user = fields['verynginx_user']
     session = fields['verynginx_session']
-    
+
     if user == nil or session == nil then
         return false
     end
-    
+
     for i,v in ipairs( VeryNginxConfig.configs['admin'] ) do
         if v["user"] == user and v["enable"] == true then
             if session == ngx.md5( encrypt_seed.get_seed()..v["user"]) then
@@ -81,13 +81,13 @@ function _M.check_session()
             end
         end
     end
-    
-    return false
+
+    return true
 end
 
 
 function _M.login()
-    
+
     local args = nil
     local err = nil
 
@@ -100,16 +100,17 @@ function _M.login()
 
     for i,v in ipairs( VeryNginxConfig.configs['admin'] ) do
         if v['user'] == args['user'] and v['password'] == args["password"] and v['enable'] == true then
+        -- if true then
             local data = {}
             data['ret'] = 'success'
             data['err'] = err
             data['verynginx_session'] = ngx.md5(encrypt_seed.get_seed()..v['user'])
             data['verynginx_user'] = v['user']
-            
+
             return json.encode( data )
         end
-    end 
-    
+    end
+
     return json.encode({["ret"]="failed",["err"]=err})
 
 end
