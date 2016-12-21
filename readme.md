@@ -3,15 +3,20 @@ VeryNginx is a very powerful and friendly nginx .
 
 [English document](#description)
 
-##介绍
+## 介绍
 
 VeryNginx 基于 `lua_nginx_module(openrestry)` 开发，实现了高级的防火墙、访问统计和其他的一些功能。 强化了 Nginx 本身的功能，并提供了友好的 Web 交互界面。
 
-[VeryNginx在线实例](http://alexazhou.xyz/vn/index.html) 
+[VeryNginx在线实例](http://alexazhou.xyz/vn/index.html)
 
 用户名 / 密码: **verynginx / verynginx**
 
-###Nginx 运行状态分析
+### TODO
+
+* 对资源访问不做统计，或者用开关的方式
+* seesion key 存储在shm中
+
+### Nginx 运行状态分析
 
 * 每秒请求数
 * 响应时间
@@ -21,7 +26,7 @@ VeryNginx 基于 `lua_nginx_module(openrestry)` 开发，实现了高级的防�
 ![Nginx 运行状态](http://ww2.sinaimg.cn/mw690/3fcd0ed3jw1f17en7oc1yj20z00ol0wl.jpg)
 
 
-###自定义行为
+### 自定义行为
 
 VeryNginx 包含强大的自定义功能，可以做很多事情
 
@@ -29,7 +34,7 @@ VeryNginx 包含强大的自定义功能，可以做很多事情
 
 这样的优势在于把所有的前置判断整合在Matcher里一起来实现了，使复杂(组合)规则的实现变成了可能
 
-####Matcher
+#### Matcher
 
 一个 Matcher 用来判断一个 Http 请求是否符合指定的条件， 一个 Matcher 可以包含一个或者多个约束条件，目前支持以下几种约束：
 
@@ -40,7 +45,7 @@ VeryNginx 包含强大的自定义功能，可以做很多事情
 * Referer
 * Request Args
 
-当一个请求没有违反 Matcher 中包含的全部条件时，即命中了这个 Matcher 
+当一个请求没有违反 Matcher 中包含的全部条件时，即命中了这个 Matcher
 
 ####Action
 
@@ -182,7 +187,7 @@ log_by_lua_file /opt/VeryNginx/VeryNginx/lua_script/on_log.lua;
 
 VeryNginx base on `lua_nginx_module(openrestry)` ,implements advanced firewall(waf), access statistics and some other features. Strengthen the Nginx own function, and provides a friendly Web interface.
 
-[VeryNginx online demo](http://alexazhou.xyz/vn/index.html) 
+[VeryNginx online demo](http://alexazhou.xyz/vn/index.html)
 
 User / Password: **verynginx / verynginx**
 
@@ -216,7 +221,7 @@ When a request not conflicted with all the conditions of the Matcher, the reques
 
 ####Action
 
-Every `Action` refers to a `Matcher` , and will run on the requests selected by the `Matcher` 
+Every `Action` refers to a `Matcher` , and will run on the requests selected by the `Matcher`
 
 Now we has these `Action`
 
@@ -236,7 +241,7 @@ VeryNginx can record the request of URI, include these data of every URI:
 
 * All Request Count
 * Request count of every status code
-* Total Bytes 
+* Total Bytes
 * Avg Bytes
 * Total response time
 * Avg reqponse time
@@ -344,5 +349,4 @@ The full version of config guide can be found in [VeryNginx Wiki](https://github
 
 ###Enjoy~
 
-[^openresty]: [OpenResty](https://github.com/openresty/openresty) 是一个Nginx再发行版本，包含了标准Nginx以及很多扩展模块. 
-
+[^openresty]: [OpenResty](https://github.com/openresty/openresty) 是一个Nginx再发行版本，包含了标准Nginx以及很多扩展模块.
