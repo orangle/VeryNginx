@@ -139,6 +139,7 @@ function _M.home_path()
     return home_path
 end
 
+
 function _M.update_config()
     --save a hash of current in lua environment
     local new_config_hash = ngx.shared.status:get('vn_config_hash')
@@ -179,11 +180,11 @@ function _M.load_from_file()
         end
 
         if tmp['config_version'] ~= _M["configs"]["config_version"] then
-            ngx.log(ngx.STDERR,"load config from config.json error,will use default config")
-            ngx.log(ngx.STDERR,"Except Version:")
+            ngx.log(ngx.STDERR, "load config from config.json error,will use default config")
+            ngx.log(ngx.STDERR, "Except Version:")
             ngx.log(ngx.STDERR, _M["configs"]["config_version"] )
-            ngx.log(ngx.STDERR,"Config.json Version:")
-            ngx.log(ngx.STDERR,tmp["config_version"])
+            ngx.log(ngx.STDERR, "Config.json Version:")
+            ngx.log(ngx.STDERR, tmp["config_version"])
         else
             _M["configs"] =  tmp
         end

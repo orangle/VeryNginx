@@ -21,17 +21,17 @@ _M.mime_type['.html'] = "text/html"
 
 function _M.filter()
     local action = string.lower(ngx.req.get_method().." "..ngx.var.uri)
-    local handle = _M.url_route[ action ]
+    local handle = _M.url_route[action]
     if handle ~= nil then
         ngx.header.content_type = "application/json"
         ngx.header.charset = "utf-8"
         if action == "post /verynginx/login" or _M.check_session() == true then
-            ngx.say( handle() )
+            ngx.say(handle())
             ngx.exit(200)
         else
             local info = json.encode({["ret"]="failed",["err"]="need login"})
             ngx.status = 401
-            ngx.say( info )
+            ngx.say(info)
         end
     elseif string.find(action,"get /verynginx/") == 1 then
         ngx.header.content_type = "text/html"
@@ -43,10 +43,10 @@ function _M.filter()
             end
         end
 
-        local path = VeryNginxConfig.home_path() .."/dashboard" .. string.sub( ngx.var.uri, string.len( "/verynginx") + 1 )
-        f = io.open( path, 'r' )
+        local path = VeryNginxConfig.home_path() .."/dashboard" .. string.sub(ngx.var.uri, string.len("/verynginx") + 1)
+        f = io.open(path, 'r')
         if f ~= nil then
-            ngx.say( f:read("*all") )
+            ngx.say(f:read("*all"))
             f:close()
             ngx.exit(200)
         else
@@ -74,7 +74,9 @@ function _M.check_session()
 
     for i,v in ipairs( VeryNginxConfig.configs['admin'] ) do
         if v["user"] == user and v["enable"] == true then
-            if session == ngx.md5( encrypt_seed.get_seed()..v["user"]) then
+            local md5str = ngx.md5(encrypt_seed.get_seed()..v["user"])
+            ngx.log(ngx.ERR, "md5str ", md5str)
+            if session == md5str then
                 return true
             else
                 return false
@@ -87,32 +89,32 @@ end
 
 
 function _M.login()
-
     local args = nil
     local err = nil
-
     ngx.req.read_body()
+
     args, err = ngx.req.get_post_args()
     if not args then
         ngx.say("failed to get post args: ", err)
         return
     end
 
-    for i,v in ipairs( VeryNginxConfig.configs['admin'] ) do
+    for i, v in ipairs(VeryNginxConfig.configs['admin']) do
         if v['user'] == args['user'] and v['password'] == args["password"] and v['enable'] == true then
-        -- if true then
             local data = {}
+            local md5str = ngx.md5(encrypt_seed.get_seed()..v['user'])
+            ngx.log(ngx.ERR, "md5str ", md5str)
+
             data['ret'] = 'success'
             data['err'] = err
-            data['verynginx_session'] = ngx.md5(encrypt_seed.get_seed()..v['user'])
+            data['verynginx_session'] = md5str
             data['verynginx_user'] = v['user']
 
-            return json.encode( data )
+            return json.encode(data)
         end
     end
 
     return json.encode({["ret"]="failed",["err"]=err})
-
 end
 
 
